@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Workout, Exercise } = require("../models");
+const Workout = require("../models/workout");
 
 router.get('/api/workouts', async (req, res) => {
     Workout.find({}).populate("exercise")
@@ -11,9 +11,12 @@ router.get('/api/workouts', async (req, res) => {
     });
 });
 
-
-router.put('/api/workouts/:id', (req, res) => {
-    Exercise.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id)}, {$push: req.body})
+router.put('/api/workouts/:id', ({ params, body }, res) => {
+    Workout.findOneAndUpdate(
+      { _id: mongojs.ObjectId(params.id)}, 
+      { $push: {exercises: body }},
+      { new: true },
+    )
     .then(updatedExercise => {
       res.json(updatedExercise);
     })
@@ -23,7 +26,7 @@ router.put('/api/workouts/:id', (req, res) => {
 });
 
 router.post('/api/workouts', ({ body }, res) => {
-  Workout.insert(body)
+  Workout.create(body)
   .then(newWorkout => {
     res.json(newWorkout);
   })
@@ -33,7 +36,13 @@ router.post('/api/workouts', ({ body }, res) => {
 });
 
 router.get('/api/workouts/range', (req, res) => {
-
+  Workout.find({}).populate("exercise")
+    .then(workouts => {
+      res.json(workouts);
+    })
+    .catch(err => {
+      res.json(err);
+    });
 })
 
 module.exports = router;
