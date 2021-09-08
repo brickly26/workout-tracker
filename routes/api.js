@@ -2,8 +2,10 @@ const router = require("express").Router();
 const Workout = require("../models/workout");
 
 router.get('/api/workouts', async (req, res) => {
-    Workout.find({}).populate("exercise")
+    Workout.find({})
     .then(workouts => {
+      workouts.durationAdder();
+      
       res.json(workouts);
     })
     .catch(err => {
@@ -13,7 +15,7 @@ router.get('/api/workouts', async (req, res) => {
 
 router.put('/api/workouts/:id', ({ params, body }, res) => {
     Workout.findOneAndUpdate(
-      { _id: mongojs.ObjectId(params.id)}, 
+      { _id: params.id}, 
       { $push: {exercises: body }},
       { new: true },
     )
@@ -36,7 +38,7 @@ router.post('/api/workouts', ({ body }, res) => {
 });
 
 router.get('/api/workouts/range', (req, res) => {
-  Workout.find({}).populate("exercise")
+  Workout.find({})
     .then(workouts => {
       res.json(workouts);
     })
