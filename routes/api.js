@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { Mongoose } = require("mongoose");
 const { Workout, Exercise } = require("../models");
 
 router.get('/api/workouts', async (req, res) => {
@@ -14,7 +13,7 @@ router.get('/api/workouts', async (req, res) => {
 
 
 router.put('/api/workouts/:id', (req, res) => {
-    Exercise.update({ _id: mongojs.ObjectId(req.params.id)}, {$set: req.body})
+    Exercise.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id)}, {$push: req.body})
     .then(updatedExercise => {
       res.json(updatedExercise);
     })
@@ -32,5 +31,9 @@ router.post('/api/workouts', ({ body }, res) => {
     res.json(err);
   });
 });
+
+router.get('/api/workouts/range', (req, res) => {
+
+})
 
 module.exports = router;
