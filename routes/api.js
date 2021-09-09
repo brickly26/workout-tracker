@@ -4,8 +4,14 @@ const Workout = require("../models/workout");
 router.get('/api/workouts', async (req, res) => {
     Workout.find({})
     .then(workouts => {
-      workouts.durationAdder();
-      
+      console.log(workouts)
+      workouts.forEach((workout) => {
+        let sum = 0
+        workout.exercises.forEach(exercise => {
+          sum += exercise.duration
+        })
+        workout.totalDuration = sum
+      })
       res.json(workouts);
     })
     .catch(err => {
