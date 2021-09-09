@@ -5,13 +5,12 @@ router.get('/api/workouts', async (req, res) => {
     Workout.find({})
     .then(workouts => {
       console.log(workouts)
-      workouts.forEach((workout) => {
-        let sum = 0
-        workout.exercises.forEach(exercise => {
-          sum += exercise.duration
-        })
-        workout.totalDuration = sum
+      const lastWorkout = workouts[workouts.length-1]
+      let sum = 0
+      lastWorkout.exercises.forEach(exercise => {
+        sum += exercise.duration
       })
+      lastWorkout.totalDuration = sum
       res.json(workouts);
     })
     .catch(err => {
