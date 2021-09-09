@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const Workout = require("../models/workout");
 
-router.get('/api/workouts', async (req, res) => {
+router.get('/api/workouts', (req, res) => {
     Workout.find({})
     .then(workouts => {
-      console.log(workouts)
       const lastWorkout = workouts[workouts.length-1]
       let sum = 0
       lastWorkout.exercises.forEach(exercise => {
