@@ -46,6 +46,14 @@ router.post('/api/workouts', ({ body }, res) => {
 router.get('/api/workouts/range', (req, res) => {
   Workout.find({})
     .then(workouts => {
+      console.log(workouts)
+      workouts.forEach((workout) => {
+        let sum = 0
+        workout.exercises.forEach(exercise => {
+          sum += exercise.duration
+        })
+        workout.totalDuration = sum
+      })
       res.json(workouts);
     })
     .catch(err => {
